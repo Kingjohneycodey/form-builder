@@ -1,18 +1,60 @@
-
 import { BsFileEarmarkPlus } from "react-icons/bs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/DialogComponent";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../components/FormComponent";
+import { Input } from "../../components/InputComponent";
+import { Button } from "../../components/ButtonComponent";
+import { Textarea } from "../../components/TextAreaComponent";
 
 const FormBuilderDashboard = () => {
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: "Form name must be at least 2 characters.",
+    }),
+    description: z.string().min(5, {
+      message: "Form description must be at least 5 characters",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
+
   return (
     <div className="p-5">
       <div>
-        <h1 className="text-3xl mb-4 font-bold">Form Builder</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <h1 className="mb-4 text-3xl font-bold">Form Builder</h1>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
             <div className="bg-[#005828] rounded-tl-lg rounded-tr-lg p-4 text-white text-center">
               <p className="text-base">Total Forms</p>
             </div>
             <div className="bg-[#03a62f] rounded-bl-lg rounded-br-lg p-4 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">10</h2>
+              <h2 className="mb-2 text-2xl font-bold">10</h2>
             </div>
           </div>
 
@@ -21,7 +63,7 @@ const FormBuilderDashboard = () => {
               <p className="text-base">Published Forms</p>
             </div>
             <div className="bg-[#03a62f] rounded-bl-lg rounded-br-lg p-4 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">10</h2>
+              <h2 className="mb-2 text-2xl font-bold">10</h2>
             </div>
           </div>
 
@@ -30,7 +72,7 @@ const FormBuilderDashboard = () => {
               <p className="text-base">Drafts</p>
             </div>
             <div className="bg-[#03a62f] rounded-bl-lg rounded-br-lg p-4 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">10</h2>
+              <h2 className="mb-2 text-2xl font-bold">10</h2>
             </div>
           </div>
 
@@ -39,16 +81,71 @@ const FormBuilderDashboard = () => {
 
         <div className="my-8 border-t border-gray-400"></div>
 
-        <h1 className="text-3xl mb-4 font-bold">Your forms</h1>
+        <h1 className="mb-4 text-3xl font-bold">Your forms</h1>
 
         <div className="my-8 border-t border-gray-400"></div>
 
-        <button
-          className="bg-white px-20 group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4 rounded-lg"
-        >
-          <BsFileEarmarkPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary" />
-          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new form</p>
-        </button>
+        <Dialog>
+          <DialogTrigger>
+            <button className="bg-white px-20 group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4 rounded-lg">
+              <BsFileEarmarkPlus className="w-8 h-8 text-muted-foreground group-hover:text-primary" />
+              <p className="text-xl font-bold text-muted-foreground group-hover:text-primary">
+                Create new form
+              </p>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="bg-white">
+            <DialogHeader className="gap-0">
+              <DialogTitle className="text-xl font-bold">
+                Create Form
+              </DialogTitle>
+              <DialogDescription className="text-base text-gray-600 font-base">
+                Create a new form to start collecting responses
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-semibold">Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter the form name" {...field} />
+                      </FormControl>
+                      <FormMessage className="text-color-dark-red" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-semibold">
+                        Description
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter the form description"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-color-dark-red" />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full">
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
