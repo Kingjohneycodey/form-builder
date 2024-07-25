@@ -13,9 +13,9 @@ const FormCard = ({
   formDescription: string;
 }) => {
   return (
-    <div className="w-[23.5%] bg-white px-6 border border-dark-green/20 h-[190px] items-center justify-center flex flex-col border-dashed gap-4 rounded-lg">
-      <div className="flex items-start justify-between w-full">
-        <div className="flex flex-col space-y-1">
+    <div className="w-[48.5%] md:w-[31.5%] lg:w-[23.5%] bg-white px-3 py-4 md:px-6 border border-dark-green/20 h-[200px] md:h-[190px] items-center justify-center flex flex-col border-dashed gap-4 rounded-lg">
+      <div className="flex flex-col items-start justify-between w-full space-y-3 md:flex-row">
+        <div className="flex flex-col md:space-y-1">
           <b className="text-base">{formName}</b>
           <span className="text-sm text-gray-600">{dateCreated}</span>
         </div>
