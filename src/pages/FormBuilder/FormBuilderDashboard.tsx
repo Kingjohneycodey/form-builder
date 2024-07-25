@@ -86,9 +86,9 @@ const FormBuilderDashboard = () => {
 
         <div className="my-8 border-t border-gray-400"></div>
 
-        <div className="flex flex-wrap items-center justify-start gap-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-4 md:justify-start md:gap-4 lg:gap-6">
           <Dialog>
-            <DialogTrigger className="w-[23.5%] bg-white px-6 group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4 rounded-lg">
+            <DialogTrigger className="w-[48.5%] md:w-[31.5%] lg:w-[23.5%] bg-white px-6 group border border-primary/20 h-[200px] md:h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4 rounded-lg">
               <BsFileEarmarkPlus className="w-8 h-8 text-muted-foreground group-hover:text-primary" />
               <p className="text-xl font-bold text-muted-foreground group-hover:text-primary">
                 Create new form
