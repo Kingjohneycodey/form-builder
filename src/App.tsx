@@ -6,18 +6,13 @@ import FormBuilderDashboard from "./pages/FormBuilder/FormBuilderDashboard";
 import NotFound from "./pages/NotFound";
 import FormBuilder from "./pages/FormBuilder/FormBuilder";
 
-
 function App() {
-
-
-
   return (
     <Router>
       <ToastContainer/>
       <Routes>
         <Route path="/" element={<FormBuilderDashboard />} />
-        <Route path="/create" element={<FormBuilder />} />
-
+        <Route path="/create-form/:id" element={<FormBuilder />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

@@ -1,4 +1,4 @@
-import { BsFileEarmarkPlus } from "react-icons/bs";
+import { BsFileEarmarkPlus, BsFileEarmarkPlusFill } from "react-icons/bs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,7 +46,7 @@ const FormBuilderDashboard = () => {
   }
 
   return (
-    <div className="p-5">
+    <div className="p-4 md:p-5">
       <div>
         <h1 className="mb-4 text-3xl font-bold">Form Builder</h1>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -88,7 +88,7 @@ const FormBuilderDashboard = () => {
 
         <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-4 md:justify-start md:gap-4 lg:gap-6">
           <Dialog>
-            <DialogTrigger className="group w-[48.5%] md:w-[31.5%] lg:w-[23.5%] bg-white px-6 border border-dashed hover:border-solid hover:border-dark-green h-[200px] md:h-[190px] items-center justify-center flex flex-col gap-4 rounded-lg">
+            <DialogTrigger className="group w-[48.5%] md:w-[31.5%] lg:w-[23.5%] bg-white px-6 border-[1.5px] border-dashed hover:border-solid hover:border-dark-green h-[200px] md:h-[190px] items-center justify-center flex flex-col gap-4 rounded-lg">
               <BsFileEarmarkPlus className="w-8 h-8 group-hover:text-dark-green" />
               <p className="text-xl font-bold group-hover:text-dark-green group-hover:cursor-pointer">
                 Create new form
