@@ -155,6 +155,7 @@ const FormBuilderDashboard = () => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
               minim veniam, quis nostrud exercitation ullamco laboris nisi ut
               aliquip ex ea commodo consequat.`}
+            formId={1}
           />
           <FormCard
             formName={"Staff Form"}
@@ -165,6 +166,7 @@ const FormBuilderDashboard = () => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
                 minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                 aliquip ex ea commodo consequat.`}
+            formId={2}
           />
           <FormCard
             formName={"Registration Form"}
@@ -175,6 +177,7 @@ const FormBuilderDashboard = () => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
               minim veniam, quis nostrud exercitation ullamco laboris nisi ut
               aliquip ex ea commodo consequat.`}
+            formId={3}
           />
           <FormCard
             formName={"Export Form"}
@@ -185,6 +188,7 @@ const FormBuilderDashboard = () => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
               minim veniam, quis nostrud exercitation ullamco laboris nisi ut
               aliquip ex ea commodo consequat.`}
+            formId={4}
           />
         </div>
       </div>

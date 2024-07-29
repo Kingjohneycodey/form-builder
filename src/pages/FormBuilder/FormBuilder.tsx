@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 import { Button } from "../../components/ButtonComponent";
 import { MdOutlinePublish, MdPreview } from "react-icons/md";
@@ -7,6 +8,50 @@ import FormElement from "../../components/FormElement";
 
 const FormBuilder = () => {
   // const { id } = useParams();
+  const [isDropElement, setIsDropElement] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  const handleDrop = (event: DragEvent) => {
+    event.preventDefault();
+    const dataTransfer = event.dataTransfer;
+    if (dataTransfer) {
+      setIsDropElement(true);
+      const elementName = dataTransfer.getData("text/plain");
+      console.log(elementName);
+      setIsDragging(false);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragEnter = (event: DragEvent) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (event: DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    const dropZone = document.getElementById("dropZone");
+
+    if (dropZone) {
+      dropZone.addEventListener("dragenter", handleDragEnter);
+      dropZone.addEventListener("dragleave", handleDragLeave);
+      dropZone.addEventListener("drop", handleDrop);
+
+      return () => {
+        dropZone.removeEventListener("dragenter", handleDragEnter);
+        dropZone.removeEventListener("dragleave", handleDragLeave);
+        dropZone.removeEventListener("drop", handleDrop);
+      };
+    }
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -40,7 +85,21 @@ const FormBuilder = () => {
       </nav>
       <main className="flex flex-row items-start justify-between h-[87vh]">
         <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full overflow-y-auto bg-repeat bg-white bg-[url(/paper.svg)]">
-          <div className="flex flex-col w-full h-full p-4 bg-[#eceef3] border border-gray-400 rounded-lg"></div>
+          <div
+            id="dropZone"
+            onDragOver={handleDragOver}
+            className={`flex flex-col w-full h-full p-4 bg-[#eceef3]  border-gray-400 rounded-lg
+              ${isDragging ? "border-4" : "border"}
+              ${
+                isDropElement
+                  ? "items-start justify-start"
+                  : "items-center justify-center"
+              }`}
+          >
+            {isDropElement ? null : (
+              <h1 className="text-3xl font-bold">Drop here</h1>
+            )}
+          </div>
         </section>
         <section className="flex flex-col space-y-4 items-start w-[24%] h-full p-4 overflow-y-auto border-l border-gray-400">
           <h2 className="w-full pb-2 font-semibold border-b border-gray-400">
