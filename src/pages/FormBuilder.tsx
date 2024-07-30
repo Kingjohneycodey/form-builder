@@ -1,15 +1,40 @@
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
-import { Button } from "../../components/ButtonComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { addElement } from "../slices/dropElementSlice";
+import { Button } from "../components/ButtonComponent";
 import { MdOutlinePublish, MdPreview } from "react-icons/md";
 import { HiSaveAs } from "react-icons/hi";
-import LayoutElement from "../../components/LayoutElement";
-import FormElement from "../../components/FormElement";
+import LayoutElement from "../components/LayoutElement";
+import FormElement from "../components/FormElement";
+import { TitleField, SubtitleField } from "../components/DropElements.js";
+
+export type ElementName =
+  | "title"
+  | "subtitle"
+  | "paragraph"
+  | "separator"
+  | "spacer";
+
+export type FieldComponents = {
+  [key in ElementName]: React.ReactElement;
+};
+
+const fieldComponents: FieldComponents = {
+  title: <TitleField />,
+  subtitle: <SubtitleField />,
+  paragraph: <div>Paragraph Field Placeholder</div>,
+  separator: <div>Separator Field Placeholder</div>,
+  spacer: <div>Spacer Field Placeholder</div>,
+};
 
 const FormBuilder = () => {
   // const { id } = useParams();
   const [isDropElement, setIsDropElement] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const elements = useSelector((state: any) => state.elements as ElementName[]);
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
@@ -17,7 +42,7 @@ const FormBuilder = () => {
     if (dataTransfer) {
       setIsDropElement(true);
       const elementName = dataTransfer.getData("text/plain");
-      console.log(elementName);
+      dispatch(addElement(elementName));
       setIsDragging(false);
     }
   };
@@ -51,7 +76,7 @@ const FormBuilder = () => {
         dropZone.removeEventListener("drop", handleDrop);
       };
     }
-  }, []);
+  });
 
   return (
     <div className="flex flex-col">
@@ -84,11 +109,11 @@ const FormBuilder = () => {
         </div>
       </nav>
       <main className="flex flex-row items-start justify-between h-[87vh]">
-        <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full overflow-y-auto bg-repeat bg-white bg-[url(/paper.svg)]">
+        <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full bg-repeat bg-white bg-[url(/paper.svg)]">
           <div
             id="dropZone"
             onDragOver={handleDragOver}
-            className={`flex flex-col w-full h-full p-4 bg-[#eceef3]  border-gray-400 rounded-lg
+            className={`flex flex-col space-y-4 w-full h-full p-4 bg-[#eceef3]  border-gray-400 rounded-lg overflow-y-auto
               ${isDragging ? "border-4" : "border"}
               ${
                 isDropElement
@@ -96,7 +121,13 @@ const FormBuilder = () => {
                   : "items-center justify-center"
               }`}
           >
-            {isDropElement ? null : (
+            {isDropElement ? (
+              elements.map((element, index) => (
+                <div key={index} className="flex flex-col w-full">
+                  {fieldComponents[element]}
+                </div>
+              ))
+            ) : (
               <h1 className="text-3xl font-bold">Drop here</h1>
             )}
           </div>

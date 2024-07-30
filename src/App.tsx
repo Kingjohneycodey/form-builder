@@ -2,9 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FormBuilderDashboard from "./pages/FormBuilder/FormBuilderDashboard";
+import FormBuilderDashboard from "./pages/FormBuilderDashboard";
 import NotFound from "./pages/NotFound";
-import FormBuilder from "./pages/FormBuilder/FormBuilder";
+import FormBuilder from "./pages/FormBuilder";
 
 function App() {
   return (

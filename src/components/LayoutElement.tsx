@@ -3,6 +3,7 @@ import { BsTextParagraph } from "react-icons/bs";
 import { RiSeparator } from "react-icons/ri";
 
 const LayoutElement = ({ name }: { name: string }) => {
+
   let layoutTitle: string;
   let layoutIcon: React.ReactElement;
 
