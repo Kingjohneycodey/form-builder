@@ -1,6 +1,5 @@
-// src/slices/dropElementSlice.d.ts
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { ElementName } from "../types/elementTypes"; // Adjust the path if needed
+import { ElementName } from "../types/elementTypes";
 
 // Declare the module and its exports
 declare module "../slices/dropElementSlice.js" {
