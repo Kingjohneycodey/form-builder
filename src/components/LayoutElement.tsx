@@ -3,8 +3,13 @@ import { BsTextParagraph } from "react-icons/bs";
 import { RiSeparator } from "react-icons/ri";
 
 const LayoutElement = ({ name }: { name: string }) => {
+
   let layoutTitle: string;
   let layoutIcon: React.ReactElement;
+
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData("text/plain", name);
+  };
 
   switch (name) {
     case "title":
@@ -34,7 +39,11 @@ const LayoutElement = ({ name }: { name: string }) => {
   }
 
   return (
-    <div className="flex flex-col w-[48%] px-2 py-4 items-center justify-center space-y-2 bg-white border-[1.5px] border-dashed border-dark-green/20 rounded-md hover:border-solid hover:border-dark-green">
+    <div
+      draggable
+      onDragStart={handleDragStart}
+      className="flex flex-col z-10 w-[48%] px-2 py-4 items-center justify-center space-y-2 bg-white border-[1.5px] border-dashed border-dark-green/20 rounded-md hover:border-solid hover:border-dark-green"
+    >
       <span className="text-3xl text-dark-green">{layoutIcon}</span>
       <p className="text-sm font-medium text-center">{layoutTitle}</p>
     </div>
