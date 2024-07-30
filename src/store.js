@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dropElementsReducer from "./slices/dropElementSlice.js";
+import dropElementsReducer from "./slices/dropElementSlice";
 
 const store = configureStore({
   reducer: {
