@@ -7,14 +7,34 @@ import { MdOutlinePublish, MdPreview } from "react-icons/md";
 import { HiSaveAs } from "react-icons/hi";
 import LayoutElement from "../components/LayoutElement";
 import FormElement from "../components/FormElement";
-import { TitleField, SubtitleField } from "../components/DropElements.js";
+import {
+  TitleField,
+  SubtitleField,
+  SeparatorField,
+  SpacerField,
+  TextField,
+  NumberField,
+  TextareaField,
+  DateField,
+  DropdownField,
+  CheckboxField,
+  RadioField,
+  TimeField,
+} from "../components/DropElements.js";
 
 export type ElementName =
   | "title"
   | "subtitle"
-  | "paragraph"
   | "separator"
-  | "spacer";
+  | "spacer"
+  | "text"
+  | "textarea"
+  | "number"
+  | "dropdown"
+  | "checkbox"
+  | "radiobox"
+  | "date"
+  | "time";
 
 export type FieldComponents = {
   [key in ElementName]: React.ReactElement;
@@ -23,9 +43,16 @@ export type FieldComponents = {
 const fieldComponents: FieldComponents = {
   title: <TitleField />,
   subtitle: <SubtitleField />,
-  paragraph: <div>Paragraph Field Placeholder</div>,
-  separator: <div>Separator Field Placeholder</div>,
-  spacer: <div>Spacer Field Placeholder</div>,
+  separator: <SeparatorField />,
+  spacer: <SpacerField />,
+  text: <TextField />,
+  textarea: <TextareaField />,
+  number: <NumberField />,
+  dropdown: <DropdownField />,
+  checkbox: <CheckboxField />,
+  radiobox: <RadioField />,
+  date: <DateField />,
+  time: <TimeField />,
 };
 
 const FormBuilder = () => {
@@ -113,7 +140,7 @@ const FormBuilder = () => {
           <div
             id="dropZone"
             onDragOver={handleDragOver}
-            className={`flex flex-col space-y-4 w-full h-full p-4 bg-[#eceef3]  border-gray-400 rounded-lg overflow-y-auto
+            className={`flex flex-col space-y-4 w-full h-full px-4 py-6 bg-[#eceef3]  border-gray-400 rounded-lg overflow-y-auto
               ${isDragging ? "border-4" : "border"}
               ${
                 isDropElement
@@ -141,20 +168,21 @@ const FormBuilder = () => {
             <div className="flex flex-wrap w-full gap-2">
               <LayoutElement name="title" />
               <LayoutElement name="subtitle" />
-              <LayoutElement name="paragraph" />
               <LayoutElement name="separator" />
               <LayoutElement name="spacer" />
             </div>
           </div>
           <div className="flex flex-col w-full space-y-2">
-            <h3 className="text-gray-600">Form Elements</h3>
+            <h3 className="text-gray-600">Form Fields</h3>
             <div className="flex flex-wrap w-full gap-2">
               <FormElement name="text" />
-              <FormElement name="number" />
               <FormElement name="textarea" />
-              <FormElement name="date" />
-              <FormElement name="select" />
+              <FormElement name="number" />
+              <FormElement name="dropdown" />
               <FormElement name="checkbox" />
+              <FormElement name="radiobox" />
+              <FormElement name="date" />
+              <FormElement name="time" />
             </div>
           </div>
         </section>

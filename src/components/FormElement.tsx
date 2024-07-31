@@ -5,7 +5,8 @@ import {
   BsFillCalendarDateFill,
 } from "react-icons/bs";
 import { RxDropdownMenu } from "react-icons/rx";
-import { IoMdCheckbox } from "react-icons/io";
+import { IoMdCheckbox, IoMdTimer } from "react-icons/io";
+import { RiListRadio } from "react-icons/ri";
 
 const FormElement = ({ name }: { name: string }) => {
   let layoutTitle: string;
@@ -32,13 +33,21 @@ const FormElement = ({ name }: { name: string }) => {
       layoutIcon = <BsFillCalendarDateFill />;
       layoutTitle = "Date field";
       break;
-    case "select":
+    case "dropdown":
       layoutIcon = <RxDropdownMenu />;
-      layoutTitle = "Select field";
+      layoutTitle = "Dropdown field";
       break;
     case "checkbox":
       layoutIcon = <IoMdCheckbox />;
       layoutTitle = "Checkbox field";
+      break;
+    case "radiobox":
+      layoutIcon = <RiListRadio />;
+      layoutTitle = "Radiobox field";
+      break;
+    case "time":
+      layoutIcon = <IoMdTimer />;
+      layoutTitle = "Time field";
       break;
     default:
       layoutIcon = <MdTextFields />;
