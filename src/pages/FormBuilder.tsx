@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addElement } from "../slices/dropElementSlice";
+import {
+  addElement,
+  removeElement,
+  // reorderElements,
+} from "../slices/dropElementSlice";
 import { Button } from "../components/ButtonComponent";
 import { MdOutlinePublish, MdPreview } from "react-icons/md";
 import { HiSaveAs } from "react-icons/hi";
@@ -37,22 +41,25 @@ export type ElementName =
   | "time";
 
 export type FieldComponents = {
-  [key in ElementName]: React.ReactElement;
+  [key in ElementName]: React.FC<{
+    handleRemove: (index: number) => void;
+    index: number;
+  }>;
 };
 
 const fieldComponents: FieldComponents = {
-  title: <TitleField />,
-  subtitle: <SubtitleField />,
-  separator: <SeparatorField />,
-  spacer: <SpacerField />,
-  text: <TextField />,
-  textarea: <TextareaField />,
-  number: <NumberField />,
-  dropdown: <DropdownField />,
-  checkbox: <CheckboxField />,
-  radiobox: <RadioField />,
-  date: <DateField />,
-  time: <TimeField />,
+  title: TitleField,
+  subtitle: SubtitleField,
+  separator: SeparatorField,
+  spacer: SpacerField,
+  text: TextField,
+  textarea: TextareaField,
+  number: NumberField,
+  dropdown: DropdownField,
+  checkbox: CheckboxField,
+  radiobox: RadioField,
+  date: DateField,
+  time: TimeField,
 };
 
 const FormBuilder = () => {
@@ -87,6 +94,10 @@ const FormBuilder = () => {
   const handleDragLeave = (event: DragEvent) => {
     event.preventDefault();
     setIsDragging(false);
+  };
+
+  const handleDelete = (index: number) => {
+    dispatch(removeElement(index));
   };
 
   useEffect(() => {
@@ -149,11 +160,16 @@ const FormBuilder = () => {
               }`}
           >
             {isDropElement ? (
-              elements.map((element, index) => (
-                <div key={index} className="flex flex-col w-full">
-                  {fieldComponents[element]}
-                </div>
-              ))
+              elements.map((element, index) => {
+                const ElementComponent = fieldComponents[element];
+                return (
+                  <ElementComponent
+                    key={index}
+                    handleRemove={handleDelete}
+                    index={index}
+                  />
+                );
+              })
             ) : (
               <h1 className="text-3xl font-bold">Drop here</h1>
             )}

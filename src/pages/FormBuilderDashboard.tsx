@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,14 +23,23 @@ import { Input } from "../components/InputComponent";
 import { Button } from "../components/ButtonComponent";
 import { Textarea } from "../components/TextAreaComponent";
 import FormCard from "../components/FormCard";
+import SelectComponent from "../components/SelectComponent";
 
 const FormBuilderDashboard = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
   const formSchema = z.object({
     name: z.string().min(2, {
       message: "Form name must be at least 2 characters.",
     }),
     description: z.string().min(5, {
       message: "Form description must be at least 5 characters",
+    }),
+    processFlowId: z.string().nonempty({
+      message: "Process Flow Id cannot be empty",
+    }),
+    tag: z.string().nonempty({
+      message: "Tag cannot be empty",
     }),
   });
 
@@ -38,11 +48,14 @@ const FormBuilderDashboard = () => {
     defaultValues: {
       name: "",
       description: "",
+      processFlowId: "",
+      tag: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setIsDialogOpen(false);
   }
 
   return (
@@ -87,7 +100,7 @@ const FormBuilderDashboard = () => {
         <div className="my-8 border-t border-gray-400"></div>
 
         <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-4 md:justify-start md:gap-4 lg:gap-6">
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger className="group w-[48.5%] md:w-[31.5%] lg:w-[23.5%] bg-white px-6 border-[1.5px] border-dashed hover:border-solid hover:border-dark-green h-[200px] md:h-[190px] items-center justify-center flex flex-col gap-4 rounded-lg">
               <BsFileEarmarkPlus className="w-8 h-8 group-hover:text-dark-green" />
               <p className="text-xl font-bold group-hover:text-dark-green group-hover:cursor-pointer">
@@ -106,7 +119,7 @@ const FormBuilderDashboard = () => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
+                  className="space-y-4"
                 >
                   <FormField
                     control={form.control}
@@ -139,6 +152,42 @@ const FormBuilderDashboard = () => {
                       </FormItem>
                     )}
                   />
+                  <div className="flex flex-row w-full gap-4">
+                    <FormField
+                      control={form.control}
+                      name="processFlowId"
+                      render={({ field }) => (
+                        <FormItem className="w-1/2">
+                          <FormLabel>Process Flow Id</FormLabel>
+                          <FormControl>
+                            <SelectComponent
+                              field={field}
+                              placeholder={"Select a process flow id"}
+                              options={["1t2y4ud73n", "2k3m5n8p0q"]}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-color-bright-red" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="tag"
+                      render={({ field }) => (
+                        <FormItem className="w-1/2">
+                          <FormLabel>Tag</FormLabel>
+                          <FormControl>
+                            <SelectComponent
+                              field={field}
+                              placeholder={"Select a tag"}
+                              options={["tag 1", "tag 2"]}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-color-bright-red" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <Button type="submit" className="w-full">
                     Submit
                   </Button>

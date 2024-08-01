@@ -1,49 +1,83 @@
 import { useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
-export const TitleField = () => {
-  const [title, setTitle] = useState<string>("Enter a Title");
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-
+export const FieldWrapper = ({
+  isFocused,
+  children,
+  handleRemove,
+  index,
+}: {
+  isFocused: boolean;
+  children: React.ReactNode;
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   return (
-    <div className="relative flex">
+    <div
+      className={`relative bg-white flex w-full p-4 border rounded-md transition-all duration-300 ease-in-out ${
+        isFocused
+          ? "border-l-4 border-dark-green"
+          : "border-l-4 border-gray-300"
+      }`}
+    >
+      <div className="flex flex-col rounded-md w-[90%]">{children}</div>
       <div
-        className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-          isFocused
-            ? "border-l-4 border-dark-green"
-            : "border-l-4 border-gray-300"
-        }`}
+        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border-r rounded-r-md hover:bg-color-bright-red/20"
+        title="Remove item"
+        onClick={() => handleRemove(index)}
       >
-        <input
-          type="text"
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className="w-full p-2 text-3xl font-bold border-none outline-none"
-          placeholder="Enter a Title"
-          required
-        />
-      </div>
-      <div className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full bg-oxblood border-r rounded-r-md hover:bg-oxblood/85">
-        <RiDeleteBin5Fill className="text-white" />
+        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
       </div>
     </div>
   );
 };
 
-export const SubtitleField = () => {
+export const TitleField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
+  const [title, setTitle] = useState<string>("Enter a Title");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  return (
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
+    >
+      <input
+        type="text"
+        name="title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className="w-full p-2 text-3xl font-bold border-none outline-none"
+        placeholder="Enter a Title"
+        required
+      />
+    </FieldWrapper>
+  );
+};
+
+export const SubtitleField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [subTitle, setSubTitle] = useState<string>("Enter a Subtitle");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -56,7 +90,7 @@ export const SubtitleField = () => {
         placeholder="Enter a Subtitle"
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
 
@@ -72,18 +106,22 @@ export const SpacerField = () => {
   );
 };
 
-export const TextField = () => {
+export const TextField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [text, setText] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -92,7 +130,7 @@ export const TextField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -107,22 +145,26 @@ export const TextField = () => {
         placeholder="Enter your answer"
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const TextareaField = () => {
+export const TextareaField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [textarea, setTextarea] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -131,7 +173,7 @@ export const TextareaField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -146,22 +188,26 @@ export const TextareaField = () => {
         rows={5}
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const NumberField = () => {
+export const NumberField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [number, setNumber] = useState<number | string>(0);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -170,7 +216,7 @@ export const NumberField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -186,11 +232,17 @@ export const NumberField = () => {
         min={0}
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const DropdownField = () => {
+export const DropdownField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [options, setOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -205,12 +257,10 @@ export const DropdownField = () => {
   };
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -219,7 +269,7 @@ export const DropdownField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -245,21 +295,27 @@ export const DropdownField = () => {
           onChange={(e) => setNewOption(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full p-2 text-base border border-gray-300 outline-none rounded-l-md"
+          className="flex-grow p-2 mr-2 border rounded-md outline-none"
           placeholder="Add new option"
         />
         <button
           onClick={handleAddOption}
-          className="p-2 text-white bg-dark-green rounded-r-md"
+          className="px-4 py-2 text-white rounded-md bg-dark-green"
         >
           Add
         </button>
       </div>
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const CheckboxField = () => {
+export const CheckboxField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [checkboxes, setCheckboxes] = useState<
     Array<{ id: number; label: string; checked: boolean }>
@@ -291,11 +347,10 @@ export const CheckboxField = () => {
   };
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out 
-     ${
-       isFocused ? "border-l-4 border-dark-green" : "border-l-4 border-gray-300"
-     }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -304,19 +359,19 @@ export const CheckboxField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
       {checkboxes.map((checkbox) => (
-        <div key={checkbox.id} className="flex items-center w-full py-2">
+        <div key={checkbox.id} className="flex items-center w-full mb-3">
           <input
             type="checkbox"
             checked={checkbox.checked}
             onChange={() => handleCheckboxChange(checkbox.id)}
-            className="mr-2 border-none outline-none"
+            className="w-5 h-5 mr-2 border border-none outline-none"
           />
-          <p className="text-sm font-medium text-gray-600">{checkbox.label}</p>
+          <p className="text-sm font-medium text-gray-600 ">{checkbox.label}</p>
         </div>
       ))}
       <div className="flex mt-2">
@@ -336,11 +391,17 @@ export const CheckboxField = () => {
           Add
         </button>
       </div>
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const RadioField = () => {
+export const RadioField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [radioButtons, setRadioButtons] = useState<
     Array<{ id: number; label: string }>
@@ -366,14 +427,10 @@ export const RadioField = () => {
   };
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out 
-      ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }
-    `}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -382,7 +439,7 @@ export const RadioField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -393,7 +450,7 @@ export const RadioField = () => {
             name="radioGroup"
             checked={selectedRadio === radioButton.id}
             onChange={() => handleRadioChange(radioButton.id)}
-            className="mr-2 border-none outline-none"
+            className="w-5 h-5 mr-2 border-none outline-none"
           />
           <p className="text-sm font-medium text-gray-600">
             {radioButton.label}
@@ -417,22 +474,26 @@ export const RadioField = () => {
           Add
         </button>
       </div>
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const DateField = () => {
+export const DateField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [date, setDate] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-transparent"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -441,7 +502,7 @@ export const DateField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -456,22 +517,26 @@ export const DateField = () => {
         placeholder="Enter a Date"
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
 
-export const TimeField = () => {
+export const TimeField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [time, setTime] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
-    <div
-      className={`flex flex-col w-full p-4 bg-white rounded-md border transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-transparent"
-      }`}
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={handleRemove}
+      index={index}
     >
       <input
         type="text"
@@ -480,7 +545,7 @@ export const TimeField = () => {
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="mb-2 text-base font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
       />
@@ -494,6 +559,6 @@ export const TimeField = () => {
         className="w-full p-2 text-base border-none outline-none"
         required
       />
-    </div>
+    </FieldWrapper>
   );
 };
