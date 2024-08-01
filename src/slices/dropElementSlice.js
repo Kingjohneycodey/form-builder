@@ -10,9 +10,6 @@ const dropElementsSlice = createSlice({
     removeElement: (state, action) => {
       return state.filter((_, index) => index !== action.payload);
     },
-    reorderElements: (state, action) => {
-      return action.payload;
-    },
   },
 });
 

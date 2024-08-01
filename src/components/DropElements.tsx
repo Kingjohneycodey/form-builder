@@ -20,7 +20,7 @@ export const FieldWrapper = ({
           : "border-l-4 border-gray-300"
       }`}
     >
-      <div className="flex flex-col rounded-md w-[90%]">{children}</div>
+      <div className="flex flex-col rounded-md w-[95%]">{children}</div>
       <div
         className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border-r rounded-r-md hover:bg-color-bright-red/20"
         title="Remove item"
@@ -94,15 +94,46 @@ export const SubtitleField = ({
   );
 };
 
-export const SeparatorField = () => {
-  return <div className="my-4 border border-gray-400"></div>;
+export const SeparatorField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
+  return (
+    <div className="relative flex w-full">
+      <div className="w-[95%] my-4 border border-gray-400"></div>
+      <div
+        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border rounded-md hover:bg-color-bright-red/20"
+        title="Remove item"
+        onClick={() => handleRemove(index)}
+      >
+        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+      </div>
+    </div>
+  );
 };
 
-export const SpacerField = () => {
+export const SpacerField = ({
+  handleRemove,
+  index,
+}: {
+  handleRemove: (index: number) => void;
+  index: number;
+}) => {
   return (
-    <>
+    <div className="relative flex w-full">
       <br />
-    </>
+      <br />
+      <div
+        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border rounded-md hover:bg-color-bright-red/20"
+        title="Remove item"
+        onClick={() => handleRemove(index)}
+      >
+        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+      </div>
+    </div>
   );
 };
 

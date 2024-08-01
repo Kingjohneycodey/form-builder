@@ -62,13 +62,16 @@ const fieldComponents: FieldComponents = {
   time: TimeField,
 };
 
+type ElementType = { itemName: string; itemPosition: number };
+
 const FormBuilder = () => {
   // const { id } = useParams();
   const [isDropElement, setIsDropElement] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+
   const dispatch = useDispatch();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const elements = useSelector((state: any) => state.elements as ElementName[]);
+  const elements = useSelector((state: any) => state.elements as ElementType[]);
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
@@ -76,10 +79,15 @@ const FormBuilder = () => {
     if (dataTransfer) {
       setIsDropElement(true);
       const elementName = dataTransfer.getData("text/plain");
-      dispatch(addElement(elementName));
+      const newPosition = elements.length + 1;
+
+      dispatch(
+        addElement({ itemName: elementName, itemPosition: newPosition })
+      );
       setIsDragging(false);
     }
   };
+  console.log("ELEMENTS:", elements);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -161,7 +169,8 @@ const FormBuilder = () => {
           >
             {isDropElement ? (
               elements.map((element, index) => {
-                const ElementComponent = fieldComponents[element];
+                const ElementComponent =
+                  fieldComponents[element.itemName as keyof FieldComponents];
                 return (
                   <ElementComponent
                     key={index}
