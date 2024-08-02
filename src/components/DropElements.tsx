@@ -1,3 +1,5 @@
+import { useDraggable } from "@dnd-kit/core";
+
 import { useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
@@ -6,14 +8,26 @@ export const FieldWrapper = ({
   children,
   handleRemove,
   index,
+  id,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
   handleRemove: (index: number) => void;
   index: number;
+  id: string;
 }) => {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id,
+  });
+
   return (
     <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={{
+        transform: `translate3d(${transform?.x}px, ${transform?.y}px, 0)`,
+      }}
       className={`relative bg-white flex w-full p-4 border rounded-md transition-all duration-300 ease-in-out ${
         isFocused
           ? "border-l-4 border-dark-green"

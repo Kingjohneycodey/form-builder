@@ -36,6 +36,7 @@ type FieldItemType = {
   [key in ElementName]: React.FC<{
     handleRemove: (index: number) => void;
     index: number;
+    id: number | string;
   }>;
 };
 
@@ -90,6 +91,7 @@ const DropArea = ({ onDrop }: { onDrop: (event: any) => void }) => {
               key={index}
               handleRemove={() => handleDelete(index)}
               index={index}
+              id={element.itemPosition}
             />
           );
         })
