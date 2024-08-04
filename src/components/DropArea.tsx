@@ -35,8 +35,10 @@ export type ElementName =
 type FieldItemType = {
   [key in ElementName]: React.FC<{
     handleRemove: (index: number) => void;
+    handleReplace: (index: number) => void;
     index: number;
-    id: number | string;
+    replaceIndex: number | null;
+    replaceMode: boolean;
   }>;
 };
 
@@ -55,7 +57,17 @@ const FieldItem: FieldItemType = {
   time: TimeField,
 };
 
-const DropArea = ({ onDrop }: { onDrop: (event: any) => void }) => {
+const DropArea = ({
+  onDrop,
+  handleReplaceMode,
+  replaceIndex,
+  replaceMode,
+}: {
+  onDrop: (event: any) => void;
+  handleReplaceMode: (index: number) => void;
+  replaceIndex: number | null;
+  replaceMode: boolean;
+}) => {
   const { isOver, setNodeRef } = useDroppable({
     id: "drop-area",
   });
@@ -65,6 +77,10 @@ const DropArea = ({ onDrop }: { onDrop: (event: any) => void }) => {
 
   const handleDelete = (index: number) => {
     dispatch(removeElement(index));
+  };
+
+  const handleReplace = (index: number) => {
+    handleReplaceMode(index);
   };
 
   console.log("ELEMENTS:", elements);
@@ -90,8 +106,10 @@ const DropArea = ({ onDrop }: { onDrop: (event: any) => void }) => {
             <FieldComponent
               key={index}
               handleRemove={() => handleDelete(index)}
+              handleReplace={() => handleReplace(index)}
               index={index}
-              id={element.itemPosition}
+              replaceIndex={replaceIndex}
+              replaceMode={replaceMode}
             />
           );
         })

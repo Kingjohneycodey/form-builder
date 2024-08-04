@@ -1,46 +1,56 @@
-import { useDraggable } from "@dnd-kit/core";
-
 import { useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import { GoArrowSwitch } from "react-icons/go";
 
 export const FieldWrapper = ({
   isFocused,
   children,
   handleRemove,
+  handleReplace,
   index,
-  id,
+  replaceIndex,
+  replaceMode,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
-  id: string;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id,
-  });
-
   return (
     <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={{
-        transform: `translate3d(${transform?.x}px, ${transform?.y}px, 0)`,
-      }}
       className={`relative bg-white flex w-full p-4 border rounded-md transition-all duration-300 ease-in-out ${
         isFocused
           ? "border-l-4 border-dark-green"
           : "border-l-4 border-gray-300"
       }`}
     >
-      <div className="flex flex-col rounded-md w-[95%]">{children}</div>
-      <div
-        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border-r rounded-r-md hover:bg-color-bright-red/20"
-        title="Remove item"
-        onClick={() => handleRemove(index)}
-      >
-        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+      <div className="flex flex-col rounded-md w-[90%]">{children}</div>
+      <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full border-r rounded-r-md">
+        <div
+          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-light-green/20 ${
+            replaceIndex === index && replaceMode === true
+              ? "bg-light-green/20"
+              : ""
+          }`}
+          title={`${
+            replaceIndex === index && replaceMode === true
+              ? "Exit Replace Mode"
+              : "Replace Item"
+          }`}
+          onClick={() => handleReplace(index)}
+        >
+          <GoArrowSwitch className="text-lg text-light-green" />
+        </div>
+        <div
+          className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20 border-r rounded-r-md"
+          title="Remove item"
+          onClick={() => handleRemove(index)}
+        >
+          <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+        </div>
       </div>
     </div>
   );
@@ -48,10 +58,16 @@ export const FieldWrapper = ({
 
 export const TitleField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [title, setTitle] = useState<string>("Enter a Title");
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -60,7 +76,10 @@ export const TitleField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -79,10 +98,16 @@ export const TitleField = ({
 
 export const SubtitleField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [subTitle, setSubTitle] = useState<string>("Enter a Subtitle");
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -91,7 +116,10 @@ export const SubtitleField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -110,20 +138,43 @@ export const SubtitleField = ({
 
 export const SeparatorField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   return (
     <div className="relative flex w-full">
-      <div className="w-[95%] my-4 border border-gray-400"></div>
-      <div
-        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border rounded-md hover:bg-color-bright-red/20"
-        title="Remove item"
-        onClick={() => handleRemove(index)}
-      >
-        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+      <div className="w-[90%] my-4 border border-gray-400"></div>
+      <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full">
+        <div
+          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-light-green/20 ${
+            replaceIndex === index && replaceMode === true
+              ? "bg-light-green/20"
+              : ""
+          }`}
+          title={`${
+            replaceIndex === index && replaceMode === true
+              ? "Exit Replace Mode"
+              : "Replace Item"
+          }`}
+          onClick={() => handleReplace(index)}
+        >
+          <GoArrowSwitch className="text-lg text-light-green" />
+        </div>
+        <div
+          className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20"
+          title="Remove item"
+          onClick={() => handleRemove(index)}
+        >
+          <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+        </div>
       </div>
     </div>
   );
@@ -131,21 +182,44 @@ export const SeparatorField = ({
 
 export const SpacerField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   return (
     <div className="relative flex w-full">
       <br />
       <br />
-      <div
-        className="flex items-center justify-center absolute top-0 right-0 z-10 w-[40px] h-full border rounded-md hover:bg-color-bright-red/20"
-        title="Remove item"
-        onClick={() => handleRemove(index)}
-      >
-        <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+      <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full">
+        <div
+          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-light-green/20 ${
+            replaceIndex === index && replaceMode === true
+              ? "bg-light-green/20"
+              : ""
+          }`}
+          title={`${
+            replaceIndex === index && replaceMode === true
+              ? "Exit Replace Mode"
+              : "Replace Item"
+          }`}
+          onClick={() => handleReplace(index)}
+        >
+          <GoArrowSwitch className="text-lg text-light-green" />
+        </div>
+        <div
+          className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20"
+          title="Remove item"
+          onClick={() => handleRemove(index)}
+        >
+          <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+        </div>
       </div>
     </div>
   );
@@ -153,10 +227,16 @@ export const SpacerField = ({
 
 export const TextField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [text, setText] = useState<string>("");
@@ -166,7 +246,10 @@ export const TextField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -196,10 +279,16 @@ export const TextField = ({
 
 export const TextareaField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [textarea, setTextarea] = useState<string>("");
@@ -209,7 +298,10 @@ export const TextareaField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -239,10 +331,16 @@ export const TextareaField = ({
 
 export const NumberField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [number, setNumber] = useState<number | string>(0);
@@ -252,7 +350,10 @@ export const NumberField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -283,10 +384,16 @@ export const NumberField = ({
 
 export const DropdownField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [options, setOptions] = useState<string[]>([]);
@@ -305,7 +412,10 @@ export const DropdownField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -356,10 +466,16 @@ export const DropdownField = ({
 
 export const CheckboxField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [checkboxes, setCheckboxes] = useState<
@@ -395,7 +511,10 @@ export const CheckboxField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -442,10 +561,16 @@ export const CheckboxField = ({
 
 export const RadioField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [radioButtons, setRadioButtons] = useState<
@@ -475,7 +600,10 @@ export const RadioField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -525,10 +653,16 @@ export const RadioField = ({
 
 export const DateField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [date, setDate] = useState<string>("");
@@ -538,7 +672,10 @@ export const DateField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"
@@ -568,10 +705,16 @@ export const DateField = ({
 
 export const TimeField = ({
   handleRemove,
+  handleReplace,
   index,
+  replaceIndex,
+  replaceMode,
 }: {
   handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
   index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
   const [time, setTime] = useState<string>("");
@@ -581,7 +724,10 @@ export const TimeField = ({
     <FieldWrapper
       isFocused={isFocused}
       handleRemove={handleRemove}
+      handleReplace={handleReplace}
       index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
     >
       <input
         type="text"

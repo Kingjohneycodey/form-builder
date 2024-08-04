@@ -6,12 +6,15 @@ import DropArea from "../components/DropArea.js";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addElement } from "../slices/dropElementSlice";
+import { addElement, replaceElement } from "../slices/dropElementSlice";
 
 type ElementType = { itemName: string; itemPosition: number };
 
 const FormBuilder = () => {
   const [activeId, setActiveId] = useState<any>(null);
+  const [replaceMode, setReplaceMode] = useState<boolean>(false);
+  const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
+
   const dispatch = useDispatch();
   const elements = useSelector((state: any) => state.elements as ElementType[]);
 
@@ -20,10 +23,25 @@ const FormBuilder = () => {
   };
 
   const handleDragEnd = (event: any) => {
+    if (replaceMode && replaceIndex !== null) {
+      dispatch(
+        replaceElement({ index: replaceIndex, itemName: event.active.id })
+      );
+      setReplaceMode(false);
+      setReplaceIndex(null);
+    } else {
+      const newPosition = elements.length + 1;
+      const elementName = event.active.id;
+      dispatch(
+        addElement({ itemName: elementName, itemPosition: newPosition })
+      );
+    }
     setActiveId(null);
-    const newPosition = elements.length + 1;
-    const elementName = event.active.id;
-    dispatch(addElement({ itemName: elementName, itemPosition: newPosition }));
+  };
+
+  const handleReplaceMode = (index: number) => {
+    setReplaceMode(!replaceMode);
+    setReplaceIndex(index);
   };
 
   return (
@@ -59,7 +77,12 @@ const FormBuilder = () => {
         </nav>
         <main className="flex flex-row items-start justify-between h-[87vh]">
           <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full bg-repeat bg-white bg-[url(/paper.svg)]">
-            <DropArea onDrop={handleDragEnd} />
+            <DropArea
+              onDrop={handleDragEnd}
+              handleReplaceMode={handleReplaceMode}
+              replaceIndex={replaceIndex}
+              replaceMode={replaceMode}
+            />
           </section>
           <section className="flex flex-col space-y-4 items-start w-[24%] h-full p-4 overflow-y-auto border-l border-gray-400">
             <h2 className="w-full pb-2 font-semibold border-b border-gray-400">

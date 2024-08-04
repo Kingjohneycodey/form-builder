@@ -6,5 +6,9 @@ declare module "../slices/dropElementSlice.js" {
     itemPosition: number;
   }>;
   export const removeElement: ActionCreatorWithPayload<number, string>;
+  export const replaceElement: ActionCreatorWithPayload<{
+    index: number;
+    itemName: string;
+  }>;
   // Add other exports here if needed
 }
