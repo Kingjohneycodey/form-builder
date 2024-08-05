@@ -62,15 +62,18 @@ const DropArea = ({
   handleReplaceMode,
   replaceIndex,
   replaceMode,
+  handleDropArea,
 }: {
   onDrop: (event: any) => void;
   handleReplaceMode: (index: number) => void;
   replaceIndex: number | null;
   replaceMode: boolean;
+  handleDropArea: (isOver: boolean) => void;
 }) => {
   const { isOver, setNodeRef } = useDroppable({
     id: "drop-area",
   });
+  handleDropArea(isOver);
 
   const dispatch = useDispatch();
   const elements = useSelector((state: any) => state.elements as ElementType[]);
@@ -83,7 +86,7 @@ const DropArea = ({
     handleReplaceMode(index);
   };
 
-  console.log("ELEMENTS:", elements);
+  // console.log("ELEMENTS:", elements);
   return (
     <div
       ref={setNodeRef}

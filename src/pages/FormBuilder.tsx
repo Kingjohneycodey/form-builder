@@ -14,7 +14,7 @@ const FormBuilder = () => {
   const [activeId, setActiveId] = useState<any>(null);
   const [replaceMode, setReplaceMode] = useState<boolean>(false);
   const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
-
+  const [isOverDropArea, setIsOverDropArea] = useState<boolean>(false);
   const dispatch = useDispatch();
   const elements = useSelector((state: any) => state.elements as ElementType[]);
 
@@ -23,25 +23,32 @@ const FormBuilder = () => {
   };
 
   const handleDragEnd = (event: any) => {
-    if (replaceMode && replaceIndex !== null) {
-      dispatch(
-        replaceElement({ index: replaceIndex, itemName: event.active.id })
-      );
-      setReplaceMode(false);
-      setReplaceIndex(null);
-    } else {
-      const newPosition = elements.length + 1;
-      const elementName = event.active.id;
-      dispatch(
-        addElement({ itemName: elementName, itemPosition: newPosition })
-      );
+    if (isOverDropArea) {
+      if (replaceMode && replaceIndex !== null) {
+        dispatch(
+          replaceElement({ index: replaceIndex, itemName: event.active.id })
+        );
+        setReplaceMode(false);
+        setReplaceIndex(null);
+      } else {
+        const newPosition = elements.length + 1;
+        const elementName = event.active.id;
+        dispatch(
+          addElement({ itemName: elementName, itemPosition: newPosition })
+        );
+      }
     }
     setActiveId(null);
+    setIsOverDropArea(false);
   };
 
   const handleReplaceMode = (index: number) => {
     setReplaceMode(!replaceMode);
     setReplaceIndex(index);
+  };
+
+  const handleDropArea = (isOver: boolean) => {
+    setIsOverDropArea(isOver);
   };
 
   return (
@@ -82,6 +89,7 @@ const FormBuilder = () => {
               handleReplaceMode={handleReplaceMode}
               replaceIndex={replaceIndex}
               replaceMode={replaceMode}
+              handleDropArea={handleDropArea}
             />
           </section>
           <section className="flex flex-col space-y-4 items-start w-[24%] h-full p-4 overflow-y-auto border-l border-gray-400">
