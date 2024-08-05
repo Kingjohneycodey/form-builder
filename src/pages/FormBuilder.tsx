@@ -1,165 +1,130 @@
-import { useState, useEffect } from "react";
-// import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addElement } from "../slices/dropElementSlice";
-import { Button } from "../components/ButtonComponent";
+import { Button } from "../components/ButtonComponent.js";
 import { MdOutlinePublish, MdPreview } from "react-icons/md";
 import { HiSaveAs } from "react-icons/hi";
-import LayoutElement from "../components/LayoutElement";
-import FormElement from "../components/FormElement";
-import { TitleField, SubtitleField } from "../components/DropElements.js";
+import DraggableField from "../components/DraggableField.js";
+import DropArea from "../components/DropArea.js";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addElement, replaceElement } from "../slices/dropElementSlice";
 
-export type ElementName =
-  | "title"
-  | "subtitle"
-  | "paragraph"
-  | "separator"
-  | "spacer";
-
-export type FieldComponents = {
-  [key in ElementName]: React.ReactElement;
-};
-
-const fieldComponents: FieldComponents = {
-  title: <TitleField />,
-  subtitle: <SubtitleField />,
-  paragraph: <div>Paragraph Field Placeholder</div>,
-  separator: <div>Separator Field Placeholder</div>,
-  spacer: <div>Spacer Field Placeholder</div>,
-};
+type ElementType = { itemName: string; itemPosition: number };
 
 const FormBuilder = () => {
-  // const { id } = useParams();
-  const [isDropElement, setIsDropElement] = useState<boolean>(false);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [activeId, setActiveId] = useState<any>(null);
+  const [replaceMode, setReplaceMode] = useState<boolean>(false);
+  const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
+  const [isOverDropArea, setIsOverDropArea] = useState<boolean>(false);
   const dispatch = useDispatch();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const elements = useSelector((state: any) => state.elements as ElementName[]);
+  const elements = useSelector((state: any) => state.elements as ElementType[]);
 
-  const handleDrop = (event: DragEvent) => {
-    event.preventDefault();
-    const dataTransfer = event.dataTransfer;
-    if (dataTransfer) {
-      setIsDropElement(true);
-      const elementName = dataTransfer.getData("text/plain");
-      dispatch(addElement(elementName));
-      setIsDragging(false);
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragEnd = (event: any) => {
+    if (isOverDropArea) {
+      if (replaceMode && replaceIndex !== null) {
+        dispatch(
+          replaceElement({ index: replaceIndex, itemName: event.active.id })
+        );
+        setReplaceMode(false);
+        setReplaceIndex(null);
+      } else {
+        const newPosition = elements.length + 1;
+        const elementName = event.active.id;
+        dispatch(
+          addElement({ itemName: elementName, itemPosition: newPosition })
+        );
+      }
     }
+    setActiveId(null);
+    setIsOverDropArea(false);
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setIsDragging(true);
+  const handleReplaceMode = (index: number) => {
+    setReplaceMode(!replaceMode);
+    setReplaceIndex(index);
   };
 
-  const handleDragEnter = (event: DragEvent) => {
-    event.preventDefault();
-    setIsDragging(true);
+  const handleDropArea = (isOver: boolean) => {
+    setIsOverDropArea(isOver);
   };
-
-  const handleDragLeave = (event: DragEvent) => {
-    event.preventDefault();
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    const dropZone = document.getElementById("dropZone");
-
-    if (dropZone) {
-      dropZone.addEventListener("dragenter", handleDragEnter);
-      dropZone.addEventListener("dragleave", handleDragLeave);
-      dropZone.addEventListener("drop", handleDrop);
-
-      return () => {
-        dropZone.removeEventListener("dragenter", handleDragEnter);
-        dropZone.removeEventListener("dragleave", handleDragLeave);
-        dropZone.removeEventListener("drop", handleDrop);
-      };
-    }
-  });
 
   return (
-    <div className="flex flex-col">
-      <nav className="flex flex-row items-center justify-between p-4 border-b border-gray-400 h-[13vh] md:p-5 md:gap-4">
-        <h1 className="text-2xl font-bold w-[68%]">
-          Form:{" "}
-          <span className="font-normal text-gray-600">Enrollment Form</span>
-        </h1>
-        <div className="flex flex-row items-center justify-between gap-1 w-[32%]">
-          <Button
-            variant={"outline"}
-            title={"Preview the form"}
-            className="w-[32%] gap-2 font-bold text-sm tracking-wide"
-          >
-            <MdPreview className="text-lg" />
-            Preview
-          </Button>
-          <Button
-            variant={"outline"}
-            title={"Save and edit later"}
-            className="w-[32%] gap-2 font-bold text-sm tracking-wide"
-          >
-            <HiSaveAs className="text-lg" />
-            Save
-          </Button>
-          <Button className="w-[32%] gap-2 font-bold text-sm tracking-wide">
-            <MdOutlinePublish className="text-lg" />
-            Publish
-          </Button>
-        </div>
-      </nav>
-      <main className="flex flex-row items-start justify-between h-[87vh]">
-        <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full bg-repeat bg-white bg-[url(/paper.svg)]">
-          <div
-            id="dropZone"
-            onDragOver={handleDragOver}
-            className={`flex flex-col space-y-4 w-full h-full p-4 bg-[#eceef3]  border-gray-400 rounded-lg overflow-y-auto
-              ${isDragging ? "border-4" : "border"}
-              ${
-                isDropElement
-                  ? "items-start justify-start"
-                  : "items-center justify-center"
-              }`}
-          >
-            {isDropElement ? (
-              elements.map((element, index) => (
-                <div key={index} className="flex flex-col w-full">
-                  {fieldComponents[element]}
-                </div>
-              ))
-            ) : (
-              <h1 className="text-3xl font-bold">Drop here</h1>
-            )}
+    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className="flex flex-col">
+        <nav className="flex flex-row items-center justify-between p-4 border-b border-gray-400 h-[13vh] md:p-5 md:gap-4">
+          <h1 className="text-2xl font-bold w-[68%]">
+            Form:{" "}
+            <span className="font-normal text-gray-600">Enrollment Form</span>
+          </h1>
+          <div className="flex flex-row items-center justify-between gap-1 w-[32%]">
+            <Button
+              variant={"outline"}
+              title={"Preview the form"}
+              className="w-[32%] gap-2 font-bold text-sm tracking-wide"
+            >
+              <MdPreview className="text-lg" />
+              Preview
+            </Button>
+            <Button
+              variant={"outline"}
+              title={"Save and edit later"}
+              className="w-[32%] gap-2 font-bold text-sm tracking-wide"
+            >
+              <HiSaveAs className="text-lg" />
+              Save
+            </Button>
+            <Button className="w-[32%] gap-2 font-bold text-sm tracking-wide">
+              <MdOutlinePublish className="text-lg" />
+              Publish
+            </Button>
           </div>
-        </section>
-        <section className="flex flex-col space-y-4 items-start w-[24%] h-full p-4 overflow-y-auto border-l border-gray-400">
-          <h2 className="w-full pb-2 font-semibold border-b border-gray-400">
-            Drag and drop elements
-          </h2>
-          <div className="flex flex-col w-full space-y-2">
-            <h3 className="text-gray-600">Layout Elements</h3>
-            <div className="flex flex-wrap w-full gap-2">
-              <LayoutElement name="title" />
-              <LayoutElement name="subtitle" />
-              <LayoutElement name="paragraph" />
-              <LayoutElement name="separator" />
-              <LayoutElement name="spacer" />
+        </nav>
+        <main className="flex flex-row items-start justify-between h-[87vh]">
+          <section className="flex flex-col items-start px-8 py-6 w-[76%] h-full bg-repeat bg-white bg-[url(/paper.svg)]">
+            <DropArea
+              onDrop={handleDragEnd}
+              handleReplaceMode={handleReplaceMode}
+              replaceIndex={replaceIndex}
+              replaceMode={replaceMode}
+              handleDropArea={handleDropArea}
+            />
+          </section>
+          <section className="flex flex-col space-y-4 items-start w-[24%] h-full p-4 overflow-y-auto border-l border-gray-400">
+            <h2 className="w-full pb-2 font-semibold border-b border-gray-400">
+              Drag and drop elements
+            </h2>
+            <div className="flex flex-col w-full space-y-2">
+              <h3 className="text-gray-600">Layout Elements</h3>
+              <div className="flex flex-wrap w-full gap-2">
+                <DraggableField name="title" />
+                <DraggableField name="subtitle" />
+                <DraggableField name="separator" />
+                <DraggableField name="spacer" />
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col w-full space-y-2">
-            <h3 className="text-gray-600">Form Elements</h3>
-            <div className="flex flex-wrap w-full gap-2">
-              <FormElement name="text" />
-              <FormElement name="number" />
-              <FormElement name="textarea" />
-              <FormElement name="date" />
-              <FormElement name="select" />
-              <FormElement name="checkbox" />
+            <div className="flex flex-col w-full space-y-2">
+              <h3 className="text-gray-600">Form Fields</h3>
+              <div className="flex flex-wrap w-full gap-2">
+                <DraggableField name="text" />
+                <DraggableField name="textarea" />
+                <DraggableField name="number" />
+                <DraggableField name="dropdown" />
+                <DraggableField name="checkbox" />
+                <DraggableField name="radiobox" />
+                <DraggableField name="date" />
+                <DraggableField name="time" />
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
-    </div>
+          </section>
+        </main>
+        <DragOverlay>
+          {activeId ? <DraggableField name={activeId} /> : null}
+        </DragOverlay>
+      </div>
+    </DndContext>
   );
 };
 
