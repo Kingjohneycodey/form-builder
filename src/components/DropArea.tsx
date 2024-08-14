@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { useDispatch, useSelector } from "react-redux";
 import { removeElement } from "../slices/dropElementSlice";
@@ -73,7 +74,10 @@ const DropArea = ({
   const { isOver, setNodeRef } = useDroppable({
     id: "drop-area",
   });
-  handleDropArea(isOver);
+
+  useEffect(() => {
+    handleDropArea(isOver);
+  });
 
   const dispatch = useDispatch();
   const elements = useSelector((state: any) => state.elements as ElementType[]);
@@ -86,7 +90,6 @@ const DropArea = ({
     handleReplaceMode(index);
   };
 
-  // console.log("ELEMENTS:", elements);
   return (
     <div
       ref={setNodeRef}

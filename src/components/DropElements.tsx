@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { GoArrowSwitch } from "react-icons/go";
+import { useQuestionContext } from "../context/QuestionContext";
 
 export const FieldWrapper = ({
   isFocused,
@@ -13,7 +14,7 @@ export const FieldWrapper = ({
 }: {
   isFocused: boolean;
   children: React.ReactNode;
-  handleRemove: (index: number) => void;
+  handleRemove: () => void;
   handleReplace: (index: number) => void;
   index: number;
   replaceIndex: number | null;
@@ -27,12 +28,12 @@ export const FieldWrapper = ({
           : "border-l-4 border-gray-300"
       }`}
     >
-      <div className="flex flex-col rounded-md w-[90%]">{children}</div>
+      <div className="flex flex-col rounded-md w-[85%]">{children}</div>
       <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full border-r rounded-r-md">
         <div
-          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-light-green/20 ${
+          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-amber-500/20 ${
             replaceIndex === index && replaceMode === true
-              ? "bg-light-green/20"
+              ? "bg-amber-500/20"
               : ""
           }`}
           title={`${
@@ -42,12 +43,12 @@ export const FieldWrapper = ({
           }`}
           onClick={() => handleReplace(index)}
         >
-          <GoArrowSwitch className="text-lg text-light-green" />
+          <GoArrowSwitch className="text-lg text-amber-500" />
         </div>
         <div
           className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20 border-r rounded-r-md"
           title="Remove item"
-          onClick={() => handleRemove(index)}
+          onClick={handleRemove}
         >
           <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
         </div>
@@ -72,10 +73,21 @@ export const TitleField = ({
   const [title, setTitle] = useState<string>("Enter a Title");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: title, elementType: "title" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -87,7 +99,7 @@ export const TitleField = ({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="w-full p-2 text-3xl font-bold border-none outline-none"
         placeholder="Enter a Title"
         required
@@ -112,10 +124,21 @@ export const SubtitleField = ({
   const [subTitle, setSubTitle] = useState<string>("Enter a Subtitle");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: subTitle, elementType: "subtitle" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -127,7 +150,7 @@ export const SubtitleField = ({
         value={subTitle}
         onChange={(e) => setSubTitle(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="w-full p-2 text-xl font-bold border-none outline-none"
         placeholder="Enter a Subtitle"
         required
@@ -149,9 +172,16 @@ export const SeparatorField = ({
   replaceIndex: number | null;
   replaceMode: boolean;
 }) => {
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, elementType: "separator" };
+
+  useEffect(() => {
+    addQuestion(newQuestion);
+  }, []);
+
   return (
     <div className="relative flex w-full">
-      <div className="w-[90%] my-4 border border-gray-400"></div>
+      <div className="w-[85%] my-4 border border-gray-400"></div>
       <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full">
         <div
           className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-light-green/20 ${
@@ -171,7 +201,10 @@ export const SeparatorField = ({
         <div
           className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20"
           title="Remove item"
-          onClick={() => handleRemove(index)}
+          onClick={() => {
+            deleteQuestion(index);
+            handleRemove(index);
+          }}
         >
           <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
         </div>
@@ -193,6 +226,13 @@ export const SpacerField = ({
   replaceIndex: number | null;
   replaceMode: boolean;
 }) => {
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, elementType: "spacer" };
+
+  useEffect(() => {
+    addQuestion(newQuestion);
+  }, []);
+
   return (
     <div className="relative flex w-full">
       <br />
@@ -216,7 +256,10 @@ export const SpacerField = ({
         <div
           className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20"
           title="Remove item"
-          onClick={() => handleRemove(index)}
+          onClick={() => {
+            deleteQuestion(index);
+            handleRemove(index);
+          }}
         >
           <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
         </div>
@@ -242,10 +285,21 @@ export const TextField = ({
   const [text, setText] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: question, elementType: "text" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -257,7 +311,7 @@ export const TextField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -294,10 +348,21 @@ export const TextareaField = ({
   const [textarea, setTextarea] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: question, elementType: "textarea" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -309,7 +374,7 @@ export const TextareaField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -346,10 +411,21 @@ export const NumberField = ({
   const [number, setNumber] = useState<number | string>(0);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: question, elementType: "number" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -361,7 +437,7 @@ export const NumberField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -401,6 +477,19 @@ export const DropdownField = ({
   const [newOption, setNewOption] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = {
+    id: index,
+    text: question,
+    options: options,
+    elementType: "dropdown",
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   const handleAddOption = () => {
     if (newOption.trim() !== "") {
       setOptions([...options, newOption]);
@@ -408,10 +497,17 @@ export const DropdownField = ({
     }
   };
 
+  useEffect(() => {
+    addQuestion(newQuestion);
+  }, [options]);
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -423,7 +519,7 @@ export const DropdownField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -484,6 +580,19 @@ export const CheckboxField = ({
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [newCheckboxLabel, setNewCheckboxLabel] = useState<string>("");
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = {
+    id: index,
+    text: question,
+    options: checkboxes,
+    elementType: "checkbox",
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   const handleCheckboxChange = (id: number) => {
     setCheckboxes((prevCheckboxes) =>
       prevCheckboxes.map((checkbox) =>
@@ -498,7 +607,7 @@ export const CheckboxField = ({
     if (newCheckboxLabel.trim() === "") return;
 
     const newCheckbox = {
-      id: Date.now(),
+      id: checkboxes.length + 1,
       label: newCheckboxLabel,
       checked: false,
     };
@@ -507,10 +616,16 @@ export const CheckboxField = ({
     setNewCheckboxLabel("");
   };
 
+  useEffect(() => {
+    addQuestion(newQuestion);
+  }, [checkboxes]);
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -522,7 +637,7 @@ export const CheckboxField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -580,6 +695,19 @@ export const RadioField = ({
   const [newRadioLabel, setNewRadioLabel] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = {
+    id: index,
+    text: question,
+    options: radioButtons,
+    elementType: "radiobox",
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   const handleRadioChange = (id: number) => {
     setSelectedRadio(id);
   };
@@ -588,7 +716,7 @@ export const RadioField = ({
     if (newRadioLabel.trim() === "") return;
 
     const newRadioButton = {
-      id: Date.now(),
+      id: radioButtons.length + 1,
       label: newRadioLabel,
     };
 
@@ -596,10 +724,17 @@ export const RadioField = ({
     setNewRadioLabel("");
   };
 
+  useEffect(() => {
+    addQuestion(newQuestion);
+  }, [radioButtons]);
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -611,7 +746,7 @@ export const RadioField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -668,10 +803,21 @@ export const DateField = ({
   const [date, setDate] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: question, elementType: "date" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -683,7 +829,7 @@ export const DateField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
@@ -720,10 +866,21 @@ export const TimeField = ({
   const [time, setTime] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: question, elementType: "time" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
   return (
     <FieldWrapper
       isFocused={isFocused}
-      handleRemove={handleRemove}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
       handleReplace={handleReplace}
       index={index}
       replaceIndex={replaceIndex}
@@ -735,7 +892,7 @@ export const TimeField = ({
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
         placeholder="Enter a question"
         required
