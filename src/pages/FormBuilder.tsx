@@ -7,10 +7,12 @@ import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addElement, replaceElement } from "../slices/dropElementSlice";
+import { useQuestionContext } from "../context/QuestionContext.js";
 
 type ElementType = { itemName: string; itemPosition: number };
 
 const FormBuilder = () => {
+  const { questions } = useQuestionContext();
   const [activeId, setActiveId] = useState<any>(null);
   const [replaceMode, setReplaceMode] = useState<boolean>(false);
   const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
@@ -51,6 +53,8 @@ const FormBuilder = () => {
     setIsOverDropArea(isOver);
   };
 
+  console.log("QUESTIONS:", questions)
+  
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex flex-col">
