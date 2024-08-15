@@ -21,38 +21,47 @@ export const FieldWrapper = ({
   replaceMode: boolean;
 }) => {
   return (
-    <div
-      className={`relative bg-white flex w-full p-4 border rounded-md transition-all duration-300 ease-in-out ${
-        isFocused
-          ? "border-l-4 border-dark-green"
-          : "border-l-4 border-gray-300"
-      }`}
-    >
-      <div className="flex flex-col rounded-md w-[85%]">{children}</div>
-      <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full border-r rounded-r-md">
-        <div
-          className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-amber-500/20 ${
-            replaceIndex === index && replaceMode === true
-              ? "bg-amber-500/20"
-              : ""
-          }`}
-          title={`${
-            replaceIndex === index && replaceMode === true
-              ? "Exit Replace Mode"
-              : "Replace Item"
-          }`}
-          onClick={() => handleReplace(index)}
-        >
-          <GoArrowSwitch className="text-lg text-amber-500" />
-        </div>
-        <div
-          className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20 border-r rounded-r-md"
-          title="Remove item"
-          onClick={handleRemove}
-        >
-          <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+    <div className="flex flex-col items-center justify-center w-full gap-2">
+      <div
+        className={`relative bg-white flex w-full p-4 border rounded-md transition-all duration-300 ease-in-out ${
+          replaceIndex === index && replaceMode === true
+            ? "shadow-[0_0_4px_1px_#005828]"
+            : isFocused
+            ? "border-l-4 border-dark-green"
+            : "border-l-4 border-gray-300"
+        }`}
+      >
+        <div className="flex flex-col rounded-md w-[85%]">{children}</div>
+        <div className="flex flex-row absolute top-0 right-0 z-10 w-[80px] h-full border-r rounded-r-md">
+          <div
+            className={`flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-dark-green/20 ${
+              replaceIndex === index && replaceMode === true
+                ? "bg-dark-green/20"
+                : ""
+            }`}
+            title={`${
+              replaceIndex === index && replaceMode === true
+                ? "Exit Replace Mode"
+                : "Replace Item"
+            }`}
+            onClick={() => handleReplace(index)}
+          >
+            <GoArrowSwitch className="text-lg text-dark-green" />
+          </div>
+          <div
+            className="flex items-center justify-center w-[40px] h-full hover:cursor-pointer hover:bg-color-bright-red/20 border-r rounded-r-md"
+            title="Remove item"
+            onClick={handleRemove}
+          >
+            <RiDeleteBin5Fill className="text-lg text-color-bright-red" />
+          </div>
         </div>
       </div>
+      {replaceIndex === index && replaceMode === true ? (
+        <p className="text-sm font-semibold text-dark-green animate-fade">
+          Drag an element to replace the field above
+        </p>
+      ) : null}
     </div>
   );
 };
