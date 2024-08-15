@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addElement, replaceElement } from "../slices/dropElementSlice";
 import { useQuestionContext } from "../context/QuestionContext.js";
+import PreviewDialogBtn from "../components/PreviewDialogBtn.js";
 
 type ElementType = { itemName: string; itemPosition: number };
 
@@ -42,6 +43,9 @@ const FormBuilder = () => {
     }
     setActiveId(null);
     setIsOverDropArea(false);
+
+
+    console.log(elements)
   };
 
   const handleReplaceMode = (index: number) => {
@@ -70,7 +74,9 @@ const FormBuilder = () => {
               className="w-[32%] gap-2 font-bold text-sm tracking-wide"
             >
               <MdPreview className="text-lg" />
-              Preview
+               
+
+               <PreviewDialogBtn/>
             </Button>
             <Button
               variant={"outline"}
