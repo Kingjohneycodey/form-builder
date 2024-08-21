@@ -129,7 +129,7 @@ function PreviewDialogBtn() {
                         </select>
                       </div>
                     ) : element.elementType == "checkbox" ? (
-                      <div key={element?.id} className="mt-4">
+                      <div key={element?.id} className="p-4 border rounded-md mt-4">
                         {element?.text}
                         <br />
 
@@ -150,7 +150,7 @@ function PreviewDialogBtn() {
                         ))}
                       </div>
                     ) : element.elementType == "radiobox" ? (
-                      <div key={element?.id}>
+                      <div key={element?.id} className="p-4 border rounded-md mt-4">
                         {element?.text}
                         {element?.options?.map((radioButton) => (
                           <div
