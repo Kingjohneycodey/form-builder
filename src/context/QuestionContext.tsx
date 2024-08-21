@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 type Question = {
   id: number;
   text?: string;
+  name?: string;
   options?: any[];
   elementType: string;
 };

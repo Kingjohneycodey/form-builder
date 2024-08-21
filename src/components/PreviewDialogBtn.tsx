@@ -66,7 +66,7 @@ function PreviewDialogBtn() {
                         <input
                           type="text"
                           name="question"
-                          value={element?.text}
+                          value={element?.name}
                           className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
                           placeholder="Enter a question"
                           required

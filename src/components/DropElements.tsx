@@ -291,11 +291,13 @@ export const TextField = ({
   replaceMode: boolean;
 }) => {
   const [question, setQuestion] = useState<string>("Enter a question");
+  const [placeholder, setPlaceholder] = useState<string>("Enter a placeholder");
+  const [key, setKey] = useState<string>("Enter a key");
   const [text, setText] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const { addQuestion, deleteQuestion } = useQuestionContext();
-  const newQuestion = { id: index, text: question, elementType: "text" };
+  const newQuestion = { id: index, name: question, elementType: "text", placeholder, key };
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -321,10 +323,36 @@ export const TextField = ({
         onChange={(e) => setQuestion(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
-        className="mb-2 text-lg font-medium text-gray-600 border-none outline-none"
+        className="mb-2 text-lg font-medium text-gray-600 border outline-none p-2"
         placeholder="Enter a question"
         required
       />
+
+<input
+        type="text"
+        name="placeholder"
+        value={placeholder}
+        onChange={(e) => setPlaceholder(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        className="mb-2 text-lg font-medium text-gray-600 border outline-none mt-2 p-2"
+        placeholder="Enter a placeholder"
+        required
+      />
+
+<input
+        type="text"
+        name="key"
+        value={key}
+        onChange={(e) => setKey(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        className="mb-2 text-lg font-medium text-gray-600 border outline-none mt-2 p-2"
+        placeholder="Enter a key"
+        required
+      />
+
+
       <input
         type="text"
         name={text}
@@ -914,6 +942,57 @@ export const TimeField = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className="w-full p-2 text-base border-none outline-none"
+        required
+      />
+    </FieldWrapper>
+  );
+};
+
+export const HiddenField = ({
+  handleRemove,
+  handleReplace,
+  index,
+  replaceIndex,
+  replaceMode,
+}: {
+  handleRemove: (index: number) => void;
+  handleReplace: (index: number) => void;
+  index: number;
+  replaceIndex: number | null;
+  replaceMode: boolean;
+}) => {
+  const [hidden, setHidden] = useState<string>("Enter a text");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const { addQuestion, deleteQuestion } = useQuestionContext();
+  const newQuestion = { id: index, text: hidden, elementType: "hidden" };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    addQuestion(newQuestion);
+  };
+
+  return (
+    <FieldWrapper
+      isFocused={isFocused}
+      handleRemove={() => {
+        deleteQuestion(index);
+        handleRemove(index);
+      }}
+      handleReplace={handleReplace}
+      index={index}
+      replaceIndex={replaceIndex}
+      replaceMode={replaceMode}
+    >
+      <input
+        type="text"
+        name="hidden"
+        value={hidden}
+        onChange={(e) => setHidden(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        className="w-full p-2 text-3xl font-bold border-none outline-none"
+        placeholder="Enter a hidden"
         required
       />
     </FieldWrapper>
