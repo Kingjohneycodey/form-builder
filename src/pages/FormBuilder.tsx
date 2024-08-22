@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addElement, replaceElement } from "../slices/dropElementSlice";
 import { useQuestionContext } from "../context/QuestionContext.js";
 import PreviewDialogBtn from "../components/PreviewDialogBtn.js";
+import { toast } from "react-toastify";
+
+import axios from "axios"
 
 type ElementType = { itemName: string; itemPosition: number };
 
@@ -58,6 +61,42 @@ const FormBuilder = () => {
   };
 
   console.log("QUESTIONS:", questions)
+
+  const handlePublish = async () => {
+
+    const formDetails = localStorage.getItem("currentForm")
+    const formDetailsData = JSON.parse(formDetails)
+
+    const formData = {
+      name: formDetailsData?.name,
+      json_form: JSON.stringify(questions),
+      process_flow_id: 1,
+      process_flow_step_id: 1,
+      tag_id: 1,
+      status: 1
+    }
+
+    try {
+  
+      // Make the POST request
+      const response = await axios.post('https://api.ngml.skillzserver.com/formbuilder/api/forms/create', formData, {
+        headers: {
+          Authorization: "Bearer 231|ewCBKQ1j3dNTTYU1imOnIR3FLMvOPtRECcvvANIy04d89335"
+        }
+      });
+
+      toast.success("Form created successfully!");
+  
+      // Handle the success response
+      console.log('Success:', response.data);
+    } catch (error: any) {
+      // Error: update the toast and show error message
+      toast.error(error?.response?.data?.message);
+  
+      // Handle the error response
+      console.error('Error:', error.response ? error.response.data : error.message);
+    }
+  }
   
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -86,7 +125,7 @@ const FormBuilder = () => {
               <HiSaveAs className="text-lg" />
               Save
             </Button>
-            <Button className="w-[32%] gap-2 font-bold text-sm tracking-wide">
+            <Button className="w-[32%] gap-2 font-bold text-sm tracking-wide" onClick={handlePublish}>
               <MdOutlinePublish className="text-lg" />
               Publish
             </Button>

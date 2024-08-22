@@ -24,9 +24,12 @@ import { Button } from "../components/ButtonComponent";
 import { Textarea } from "../components/TextAreaComponent";
 import FormCard from "../components/FormCard";
 import SelectComponent from "../components/SelectComponent";
+import { useNavigate } from "react-router-dom";
 
 const FormBuilderDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate()
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -55,6 +58,10 @@ const FormBuilderDashboard = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    localStorage.setItem("currentForm", JSON.stringify(values))
+
+    navigate("/create-form/new")
     setIsDialogOpen(false);
   }
 
