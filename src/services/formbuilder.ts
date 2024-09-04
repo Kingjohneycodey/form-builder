@@ -1,5 +1,5 @@
 
-export async function fetchForms<T>(): Promise<T> {
+const fetchForms = async (): Promise<{ data: any[] }> => {
     try {
       const response = await fetch(`https://api.ngml.skillzserver.com/formbuilder/api/forms`, {
         headers: {
@@ -12,10 +12,12 @@ export async function fetchForms<T>(): Promise<T> {
       }
   
       const data = await response.json();
-      return data as T;
+      return data;
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error; // Re-throw error so that it can be handled by the calling function
     }
   }
-  
+
+
+export default fetchForms

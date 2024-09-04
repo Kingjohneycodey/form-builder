@@ -25,30 +25,36 @@ import { Textarea } from "../components/TextAreaComponent";
 import FormCard from "../components/FormCard";
 import SelectComponent from "../components/SelectComponent";
 import { useNavigate } from "react-router-dom";
-import { fetchForms } from "../services/formbuilder";
+import fetchForms from "../services/formbuilder";
+
+interface Form {
+  id: number;
+  name: string;
+  // Add other form properties if needed
+}
 
 const FormBuilderDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const navigate = useNavigate()
 
-  const [data, setData] = useState<Object[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] =useState<Form[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
-        setLoading(true);
+        // setLoading(true);
         const result = await fetchForms();
         setData(result.data);
 
         console.log(result)
 
       } catch (err) {
-        setError('Failed to fetch data');
+        // setError('Failed to fetch data');
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
@@ -229,9 +235,9 @@ const FormBuilderDashboard = () => {
             </DialogContent>
           </Dialog>
 
-          {data && data.map((form) => (
+          {data && data.map((form: Form) => (
                  <FormCard
-                 formName={form.name}
+                 formName={form?.name}
                  formStatus={"Draft"}
                  dateCreated={"1 day ago"}
                  formDescription={`
@@ -239,7 +245,7 @@ const FormBuilderDashboard = () => {
                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                    aliquip ex ea commodo consequat.`}
-                 formId={form.id}
+                 formId={form?.id}
                />
         ))}
 

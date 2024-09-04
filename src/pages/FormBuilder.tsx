@@ -64,16 +64,14 @@ const FormBuilder = () => {
   console.log("QUESTIONS:", questions)
 
   useEffect(() => {
-    const formDetails = localStorage.getItem("currentForm")
-    const formDetailsData = JSON.parse(formDetails)
+    const formDetailsData: any = JSON.parse(localStorage.getItem("currentForm") || 'null');
 
     setTitle(formDetailsData?.name)
   }, [])
 
   const handlePublish = async () => {
 
-    const formDetails = localStorage.getItem("currentForm")
-    const formDetailsData = JSON.parse(formDetails)
+    const formDetailsData: any = JSON.parse(localStorage.getItem("currentForm") || 'null');
 
     const formData = {
       name: formDetailsData?.name,

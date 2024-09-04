@@ -1,7 +1,7 @@
 import { useQuestionContext } from "../context/QuestionContext.js";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { FieldWrapper } from "./DropElements.js";
+// import { FieldWrapper } from "./DropElements.js";
 
 function PreviewDialogBtn() {
   const { questions } = useQuestionContext();
