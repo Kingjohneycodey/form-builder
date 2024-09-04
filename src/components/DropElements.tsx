@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { GoArrowSwitch } from "react-icons/go";
 import { useQuestionContext } from "../context/QuestionContext";
+import { toast } from "react-toastify";
 
 export const FieldWrapper = ({
   isFocused,
@@ -297,7 +298,13 @@ export const TextField = ({
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const { addQuestion, deleteQuestion } = useQuestionContext();
-  const newQuestion = { id: index, name: question, elementType: "text", placeholder, key };
+  const newQuestion = {
+    id: index,
+    name: question,
+    elementType: "text",
+    placeholder,
+    key,
+  };
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -328,7 +335,7 @@ export const TextField = ({
         required
       />
 
-<input
+      <input
         type="text"
         name="placeholder"
         value={placeholder}
@@ -340,7 +347,7 @@ export const TextField = ({
         required
       />
 
-<input
+      <input
         type="text"
         name="key"
         value={key}
@@ -351,7 +358,6 @@ export const TextField = ({
         placeholder="Enter a key"
         required
       />
-
 
       <input
         type="text"
@@ -513,6 +519,9 @@ export const DropdownField = ({
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [newOption, setNewOption] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [mode, setMode] = useState<"manual" | "link">("manual");
+  const [link, setLink] = useState<string>("");
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const { addQuestion, deleteQuestion } = useQuestionContext();
   const newQuestion = {
@@ -531,6 +540,36 @@ export const DropdownField = ({
     if (newOption.trim() !== "") {
       setOptions([...options, newOption]);
       setNewOption("");
+    }
+  };
+
+  const handleAddLinkOptions = async () => {
+    setIsFetching(true);
+    setOptions([]);
+    if (link.trim() !== "") {
+      try {
+        const response = await fetch(link, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // setOptions(data);
+          toast.success("Options fetched successfully!");
+        } else {
+          toast.error("Failed to fetch options from link");
+          console.error("Failed to fetch options from link");
+        }
+      } catch (error: any) {
+        toast.error("Internal Server Error");
+        console.error("Error fetching options:", error);
+      } finally {
+        setIsFetching(false);
+        setLink("");
+      }
     }
   };
 
@@ -561,6 +600,7 @@ export const DropdownField = ({
         placeholder="Enter a question"
         required
       />
+
       <select
         value={selectedOption}
         onChange={(e) => setSelectedOption(e.target.value)}
@@ -576,23 +616,69 @@ export const DropdownField = ({
           </option>
         ))}
       </select>
+
       <div className="flex mt-2">
-        <input
-          type="text"
-          value={newOption}
-          onChange={(e) => setNewOption(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className="flex-grow p-2 mr-2 border rounded-md outline-none"
-          placeholder="Add new option"
-        />
         <button
-          onClick={handleAddOption}
-          className="px-4 py-2 text-white rounded-md bg-dark-green"
+          onClick={() => {
+            setMode("manual");
+            setOptions([]);
+          }}
+          className={`px-4 py-2 mr-2 ${
+            mode === "manual" ? "bg-dark-green text-white" : "bg-gray-200"
+          } rounded-md`}
         >
-          Add
+          Add Option Manually
+        </button>
+        <button
+          onClick={() => {
+            setMode("link");
+            setOptions([]);
+          }}
+          className={`px-4 py-2 ${
+            mode === "link" ? "bg-dark-green text-white" : "bg-gray-200"
+          } rounded-md`}
+        >
+          Paste Link
         </button>
       </div>
+
+      {mode === "manual" ? (
+        <div className="flex mt-2">
+          <input
+            type="text"
+            value={newOption}
+            onChange={(e) => setNewOption(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            className="flex-grow p-2 mr-2 border rounded-md outline-none"
+            placeholder="Add new option"
+          />
+          <button
+            onClick={handleAddOption}
+            className="px-4 py-2 text-white rounded-md bg-dark-green"
+          >
+            Add
+          </button>
+        </div>
+      ) : (
+        <div className="flex mt-2">
+          <input
+            type="text"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            className="flex-grow p-2 mr-2 border rounded-md outline-none"
+            placeholder="Paste link here"
+          />
+          <button
+            onClick={handleAddLinkOptions}
+            className="px-4 py-2 text-white rounded-md bg-dark-green"
+          >
+            {isFetching ? "Fetching options..." : "Add"}
+          </button>
+        </div>
+      )}
     </FieldWrapper>
   );
 };
