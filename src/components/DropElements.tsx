@@ -556,7 +556,7 @@ export const DropdownField = ({
         });
 
         if (response.ok) {
-          const data = await response.json();
+          // const data = await response.json();
           // setOptions(data);
           toast.success("Options fetched successfully!");
         } else {
