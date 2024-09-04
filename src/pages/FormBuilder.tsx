@@ -4,7 +4,7 @@ import { HiSaveAs } from "react-icons/hi";
 import DraggableField from "../components/DraggableField.js";
 import DropArea from "../components/DropArea.js";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addElement, replaceElement } from "../slices/dropElementSlice";
 import { useQuestionContext } from "../context/QuestionContext.js";
@@ -23,6 +23,7 @@ const FormBuilder = () => {
   const [isOverDropArea, setIsOverDropArea] = useState<boolean>(false);
   const dispatch = useDispatch();
   const elements = useSelector((state: any) => state.elements as ElementType[]);
+  const [title, setTitle] = useState("Title")
 
   const handleDragStart = (event: any) => {
     setActiveId(event.active.id);
@@ -61,6 +62,13 @@ const FormBuilder = () => {
   };
 
   console.log("QUESTIONS:", questions)
+
+  useEffect(() => {
+    const formDetails = localStorage.getItem("currentForm")
+    const formDetailsData = JSON.parse(formDetails)
+
+    setTitle(formDetailsData?.name)
+  }, [])
 
   const handlePublish = async () => {
 
@@ -104,7 +112,7 @@ const FormBuilder = () => {
         <nav className="flex flex-row items-center justify-between p-4 border-b border-gray-400 h-[13vh] md:p-5 md:gap-4">
           <h1 className="text-2xl font-bold w-[68%]">
             Form:{" "}
-            <span className="font-normal text-gray-600">Enrollment Form</span>
+            <span className="font-normal text-gray-600">{title}</span>
           </h1>
           <div className="flex flex-row items-center justify-between gap-1 w-[32%]">
             <Button

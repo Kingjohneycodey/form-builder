@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,11 +25,37 @@ import { Textarea } from "../components/TextAreaComponent";
 import FormCard from "../components/FormCard";
 import SelectComponent from "../components/SelectComponent";
 import { useNavigate } from "react-router-dom";
+import { fetchForms } from "../services/formbuilder";
 
 const FormBuilderDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const navigate = useNavigate()
+
+  const [data, setData] = useState<Object[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        setLoading(true);
+        const result = await fetchForms();
+        setData(result.data);
+
+        console.log(result)
+
+      } catch (err) {
+        setError('Failed to fetch data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromAPI();
+  }, []);
+
+
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -202,7 +228,23 @@ const FormBuilderDashboard = () => {
               </Form>
             </DialogContent>
           </Dialog>
-          <FormCard
+
+          {data && data.map((form) => (
+                 <FormCard
+                 formName={form.name}
+                 formStatus={"Draft"}
+                 dateCreated={"1 day ago"}
+                 formDescription={`
+                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                   minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                   aliquip ex ea commodo consequat.`}
+                 formId={form.id}
+               />
+        ))}
+
+
+          {/* <FormCard
             formName={"Enrollment Form"}
             formStatus={"Draft"}
             dateCreated={"1 day ago"}
@@ -245,7 +287,7 @@ const FormBuilderDashboard = () => {
               minim veniam, quis nostrud exercitation ullamco laboris nisi ut
               aliquip ex ea commodo consequat.`}
             formId={4}
-          />
+          /> */}
         </div>
       </div>
     </div>
